@@ -62,7 +62,7 @@ fun UserView(
                 text = userLocation,
                 modifier = Modifier
                     .fillMaxWidth(),
-                fontSize = 10.sp,
+                fontSize = 12.sp,
                 fontStyle = FontStyle.Italic
             )
         }
