@@ -7,8 +7,10 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.warh.whispy_sn.ui.components.NewPostCard
+import com.warh.whispy_sn.ui.theme.WhispySNTheme
 
 @Composable
 fun NewPostScreen() {
@@ -26,5 +28,13 @@ fun NewPostScreen() {
             onUploadImageIconClicked = {  },
             onSendIconClicked = {  }
         )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun NewPostScreenPreview() {
+    WhispySNTheme {
+        NewPostScreen()
     }
 }

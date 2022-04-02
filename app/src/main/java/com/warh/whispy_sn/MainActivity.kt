@@ -6,8 +6,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.warh.whispy_sn.ui.screens.MainScreen
-import com.warh.whispy_sn.ui.screens.NewPostScreen
-import com.warh.whispy_sn.ui.screens.SearchPeopleScreen
 import com.warh.whispy_sn.ui.theme.WhispySNTheme
 
 class MainActivity : ComponentActivity() {
@@ -15,9 +13,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             WhispySNTheme {
-                MainScreen()
+                //MainScreen()
                 //SearchPeopleScreen()
                 //NewPostScreen()
+                //ProfileScreen(){}
             }
         }
     }

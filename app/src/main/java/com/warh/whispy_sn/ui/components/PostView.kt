@@ -79,7 +79,7 @@ fun Post(
                 Image(
                     painter = rememberAsyncImagePainter(postImageUrl, placeholder = painterResource(R.drawable.placeholder)),
                     contentDescription = "Post image",
-                    contentScale = ContentScale.Fit,
+                    contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxWidth()
                 )
             }
