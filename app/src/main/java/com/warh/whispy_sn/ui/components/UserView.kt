@@ -16,12 +16,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
+import com.warh.whispy_sn.R
 
 @Composable
 fun UserView(
@@ -29,7 +31,8 @@ fun UserView(
     username: String,
     userLocation: String,
     actionIcon: ImageVector,
-    onClickAction: () -> Unit
+    normalSize: Boolean? = true,
+    onClickAction: () -> Unit,
 ) {
     Row(
         Modifier
@@ -37,16 +40,24 @@ fun UserView(
         verticalAlignment = Alignment.CenterVertically
     ){
         Image(
-            painter = rememberAsyncImagePainter(urlProfileImage),
+            painter = rememberAsyncImagePainter(urlProfileImage, placeholder = painterResource(R.drawable.placeholder)),
             contentDescription = "Profile image",
             contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .size(56.dp)
-                .clip(CircleShape)
-                .border(2.dp, Color.Black, CircleShape),
+            modifier =
+                if (normalSize!!)
+                    Modifier
+                        .size(56.dp)
+                        .clip(CircleShape)
+                        .border(2.dp, Color.Black, CircleShape)
+                else
+                    Modifier
+                        .size(82.dp)
+                        .clip(CircleShape)
+                        .border(2.dp, Color.Black, CircleShape)
         )
         Column (
-            Modifier.fillMaxWidth()
+            Modifier
+                .fillMaxWidth()
                 .weight(1f)
                 .padding(horizontal = 10.dp)
         ) {
@@ -55,14 +66,16 @@ fun UserView(
                 modifier = Modifier
                     .fillMaxWidth(),
                 fontWeight = FontWeight.Bold,
-                fontSize = 17.sp
+                fontSize = if (normalSize) 17.sp else 24.sp
             )
+
+            Spacer(modifier = if (normalSize) Modifier.padding(1.dp) else Modifier.padding(4.dp))
 
             Text(
                 text = userLocation,
                 modifier = Modifier
                     .fillMaxWidth(),
-                fontSize = 12.sp,
+                fontSize = if (normalSize) 12.sp else 17.sp,
                 fontStyle = FontStyle.Italic
             )
         }
@@ -80,8 +93,7 @@ fun UserViewPreview(){
         urlProfileImage = "https://cdn-icons-png.flaticon.com/512/206/206881.png",
         username = "myminsta",
         userLocation = "Esperanza, Santa Fe, Argentina",
-        actionIcon = Icons.Filled.Remove
-    ) {
-
-    }
+        actionIcon = Icons.Filled.Remove,
+        onClickAction = {}
+    )
 }

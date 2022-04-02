@@ -15,9 +15,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             WhispySNTheme {
-                //MainScreen()
+                MainScreen()
                 //SearchPeopleScreen()
-                NewPostScreen()
+                //NewPostScreen()
             }
         }
     }

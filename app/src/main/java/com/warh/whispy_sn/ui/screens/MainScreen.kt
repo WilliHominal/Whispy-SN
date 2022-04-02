@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import com.warh.whispy_sn.ui.components.Post
 import com.warh.whispy_sn.ui.theme.WhispySNTheme
 
-private data class PostModel (var urlProfileImage: String, var username: String, var postContent: String, var postImageUrl: String? = null)
+data class PostModel (var urlProfileImage: String, var username: String, var postContent: String, var postImageUrl: String? = null)
 
 @Composable
 fun MainScreen() {

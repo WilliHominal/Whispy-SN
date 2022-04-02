@@ -27,7 +27,8 @@ fun Post(
     urlProfileImage: String,
     username: String,
     postContent: String,
-    postImageUrl: String? = null
+    postImageUrl: String? = null,
+    withHeader: Boolean? = true
 ) {
     Card (
         elevation = 5.dp,
@@ -36,34 +37,36 @@ fun Post(
         border = BorderStroke(4.dp, MaterialTheme.colors.primary)
     ) {
         Column {
-            Row(
-                Modifier
-                    .padding(vertical = 5.dp, horizontal = 10.dp)
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ){
-                Image(
-                    painter = rememberAsyncImagePainter(urlProfileImage),
-                    contentDescription = "Profile image",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .size(38.dp)
-                        .clip(CircleShape)
-                        .border(2.dp, Color.Black, CircleShape),
-                )
-                Text(
-                    text = username,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f)
-                        .padding(horizontal = 10.dp)
-                )
-                IconButton(onClick = { /*TODO IMPLEMENTAR ACCION*/ }) {
-                    Icon(Icons.Filled.Menu, "Post options")
+            if (withHeader == true){
+                Row(
+                    Modifier
+                        .padding(vertical = 5.dp, horizontal = 10.dp)
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ){
+                    Image(
+                        painter = rememberAsyncImagePainter(urlProfileImage),
+                        contentDescription = "Profile image",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .size(38.dp)
+                            .clip(CircleShape)
+                            .border(2.dp, Color.Black, CircleShape),
+                    )
+                    Text(
+                        text = username,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
+                            .padding(horizontal = 10.dp)
+                    )
+                    IconButton(onClick = { /*TODO IMPLEMENTAR ACCION*/ }) {
+                        Icon(Icons.Filled.Menu, "Post options")
+                    }
                 }
-            }
 
-            Divider(color = MaterialTheme.colors.primary)
+                Divider(color = MaterialTheme.colors.primary)
+            }
 
             Text(
                 text = postContent,
