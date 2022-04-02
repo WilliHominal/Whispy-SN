@@ -26,7 +26,7 @@ fun MainScreen() {
             .background(MaterialTheme.colors.background),
     ) {
         LazyColumn(
-            modifier = Modifier.padding(horizontal = 15.dp),
+            modifier = Modifier.padding(horizontal = 15.dp).padding(top = 15.dp),
         ){
             items(friends){ friend ->
                 DataProvider.getUserPosts(friend).forEach { post ->

@@ -10,7 +10,7 @@ class DataProvider {
         private val users = listOf(
             UserModel(
                 "MaryJafanna",
-                "https://this-person-does-not-exist.com/img/avatar-c9b4e772e8ded519893f6e842c3c5115.jpg",
+                "https://img.freepik.com/free-vector/mother-holding-with-baby-character_40876-2370.jpg?t=st=1648932627~exp=1648933227~hmac=594237a8b84ee67bf90f676ce7d6a5cc868ec3a83c7479e0b4af26173456365c&w=826",
                 "Jaffna",
                 "Sri Lanka",
                 listOf("ValeryH", "Papourê", "Willito"),
@@ -32,7 +32,7 @@ class DataProvider {
 
             UserModel(
                 "ValeryH",
-                "https://this-person-does-not-exist.com/img/avatar-e0bf1f3ad4d379814efbdbe14cd23145.jpg",
+                "https://img.freepik.com/free-vector/anime-girl-photo-winter-scene_603843-151.jpg?t=st=1648932569~exp=1648933169~hmac=7ebe037669fdc364ebd13795c4e04c9b26b9f46dbf38689f63ba4b4023ce7266&w=900",
                 "Valera",
                 "Venezuela",
                 listOf("MaryJafanna"),
@@ -50,7 +50,7 @@ class DataProvider {
 
             UserModel(
                 "Papourê",
-                "https://placekitten.com/200/200",
+                "https://img.freepik.com/free-vector/man-profile-cartoon_18591-58482.jpg",
                 "Amiens",
                 "Francia",
                 listOf("MaryJafanna", "Willito"),
@@ -72,7 +72,7 @@ class DataProvider {
 
             UserModel(
                 "Willito",
-                "https://this-person-does-not-exist.com/img/avatar-db5098ad1b699ea09ece70281b879f06.jpg",
+                "https://img.freepik.com/free-vector/happy-young-man-avatar-character_18591-63315.jpg?w=740",
                 "Esperanza",
                 "Argentina",
                 listOf("MaryJafanna", "Papourê"),

@@ -35,7 +35,7 @@ fun ProfileScreen(
             .background(MaterialTheme.colors.background),
     ) {
         LazyColumn(
-            modifier = Modifier.padding(horizontal = 15.dp),
+            modifier = Modifier.padding(horizontal = 15.dp).padding(top = 15.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ){
             item {
