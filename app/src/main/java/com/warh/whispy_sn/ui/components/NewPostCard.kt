@@ -1,5 +1,6 @@
 package com.warh.whispy_sn.ui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -10,6 +11,8 @@ import androidx.compose.material.icons.filled.Send
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.warh.whispy_sn.ui.theme.WhispySNTheme
@@ -22,16 +25,15 @@ fun NewPostCard(
     onSendIconClicked: () -> Unit
 ) {
     Card(
-        elevation = 8.dp,
+        elevation = 2.dp,
         shape = RoundedCornerShape(20.dp),
         modifier = Modifier
             .fillMaxWidth()
             .height(280.dp)
-            .border(2.dp, MaterialTheme.colors.primary)
+            .border(2.dp, MaterialTheme.colors.primary, RoundedCornerShape(20.dp))
+            .background(Color.Transparent)
     ) {
-        Column(
-
-        ){
+        Column {
             OutlinedTextField(
                 value = postText,
                 modifier = Modifier
