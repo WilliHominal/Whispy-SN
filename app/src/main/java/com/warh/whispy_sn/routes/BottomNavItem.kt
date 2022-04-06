@@ -8,6 +8,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -24,8 +25,8 @@ sealed class BottomNavItem (var title: String, var icon: ImageVector, var screen
 }
 
 @Composable
-fun NavigationGraph(navController: NavHostController, modifier: Modifier){
-    NavHost(navController, startDestination = BottomNavItem.Home.screenRoute, modifier = modifier) {
+fun NavigationGraph(bottomNavController: NavHostController, modifier: Modifier){
+    NavHost(bottomNavController, startDestination = BottomNavItem.Home.screenRoute, modifier = modifier) {
         composable(BottomNavItem.Home.screenRoute){
             MainScreen()
         }

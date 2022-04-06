@@ -1,5 +1,6 @@
 package com.warh.whispy_sn.ui.components
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -11,12 +12,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.google.firebase.auth.FirebaseAuth
+import com.warh.whispy_sn.routes.NavigationScreens
 import com.warh.whispy_sn.ui.theme.WhispySNTheme
 
 @Composable
 fun Topbar(
-    username: String
+    username: String,
+    navController: NavController
 ) {
+    val auth = FirebaseAuth.getInstance()
+
     TopAppBar(
         backgroundColor = MaterialTheme.colors.primary,
         contentColor = Color.Black,
@@ -32,7 +40,20 @@ fun Topbar(
                 Text(text = username)
                 IconButton(
                     onClick = {
+                        var routesString = ""
 
+                        navController.backQueue.forEach {
+                            routesString += it.destination.route + ", "
+                        }
+
+                        Log.d("TOPBAR",routesString )
+
+                        auth.signOut()
+
+                        navController.navigate(NavigationScreens.Login.screenRoute){
+                            popUpTo(navController.graph.startDestinationId)
+                            launchSingleTop = true
+                        }
                     }
                 ) {
                     Icon(Icons.Outlined.Logout, "Logout")
@@ -45,7 +66,8 @@ fun Topbar(
 @Preview(showBackground = true)
 @Composable
 fun TopbarPreview(){
+    val navController = rememberNavController()
     WhispySNTheme {
-        Topbar("my_username")
+        Topbar("my_username", navController)
     }
 }
