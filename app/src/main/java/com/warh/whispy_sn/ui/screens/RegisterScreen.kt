@@ -6,9 +6,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -18,14 +16,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.warh.whispy_sn.R
-import com.warh.whispy_sn.repository.AccountDao
 import com.warh.whispy_sn.repository.AccountDaoImpl
+import com.warh.whispy_sn.routes.NavigationScreens
 import com.warh.whispy_sn.ui.components.EditText
 import com.warh.whispy_sn.ui.theme.WhispySNTheme
 
 @Composable
-fun RegisterScreen() {
+fun RegisterScreen(navController: NavController) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
@@ -85,7 +85,10 @@ fun RegisterScreen() {
                     EditText(value = city, placeholder = "City", onValueChange = { city = it })
                     TextButton(
                         onClick = {
-                            /* TODO navigate to login */
+                            navController.navigate(NavigationScreens.Login.screenRoute){
+                                popUpTo(navController.graph.startDestinationId)
+                                launchSingleTop = true
+                            }
                         }
                     ) {
                         Text(
@@ -110,6 +113,7 @@ fun RegisterScreen() {
                                     Toast.makeText(context, "User created", Toast.LENGTH_SHORT)
                                         .show()
                                     Log.d("REGISTER_SCREEN", "User created: ${user!!.email}")
+                                    navController.navigate(NavigationScreens.AppScaffold.screenRoute)
                                 } else {
                                     Toast.makeText(context, "Register failed", Toast.LENGTH_SHORT)
                                         .show()
@@ -137,7 +141,8 @@ fun RegisterScreen() {
 @Preview(showBackground = true)
 @Composable
 fun RegisterScreenPreview(){
+    val navController = rememberNavController()
     WhispySNTheme {
-        RegisterScreen()
+        RegisterScreen(navController)
     }
 }

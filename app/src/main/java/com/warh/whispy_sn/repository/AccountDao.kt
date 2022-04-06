@@ -12,7 +12,7 @@ import com.google.firebase.ktx.Firebase
 
 interface AccountDao {
     fun registerAccount(username: String, email: String, password: String, city: String, country: String, callback: RegisterAccountCallback)
-    fun login()
+    fun login(username: String, password: String, callback: LoginAccountCallback)
 }
 
 class AccountDaoImpl() : AccountDao {
@@ -51,7 +51,7 @@ class AccountDaoImpl() : AccountDao {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Log.w(TAG, "loadPost:onCancelled", error.toException())
+                Log.w(TAG, "register:onCancelled", error.toException())
             }
 
         })
@@ -82,11 +82,48 @@ class AccountDaoImpl() : AccountDao {
             }
     }
 
-    override fun login() {
+    override fun login(username: String, password: String, callback: LoginAccountCallback) {
+        val emailLogin: Boolean = android.util.Patterns.EMAIL_ADDRESS.matcher(username).matches()
 
+        if (emailLogin) {
+            auth.signInWithEmailAndPassword(username, password).addOnCompleteListener { result ->
+                if (result.isSuccessful) {
+                    Log.d(TAG, "signInWithEmail: Success")
+                    callback.loginAccount(true, auth.currentUser, null)
+                } else {
+                    Log.w(TAG, "signInWithEmail: Failure", result.exception)
+                    callback.loginAccount(false, null, result.exception.toString())
+                }
+            }
+        } else {
+            database.child(USERS_PATH).child(username).child("email").addListenerForSingleValueEvent(object: ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.exists()){
+                        auth.signInWithEmailAndPassword(snapshot.value as String, password).addOnCompleteListener { result ->
+                            if (result.isSuccessful){
+                                Log.d(TAG, "signInWithEmail: Success")
+                                callback.loginAccount(true, auth.currentUser, null)
+                            } else {
+                                Log.w(TAG, "signInWithEmail: Failure", result.exception)
+                                callback.loginAccount(false, null, result.exception.toString())
+                            }
+                        }
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Log.w(TAG, "login:onCancelled", error.toException())
+                }
+
+            })
+        }
     }
 }
 
 fun interface RegisterAccountCallback {
     fun registerAccount(success: Boolean, user: FirebaseUser?, error: String?)
+}
+
+fun interface LoginAccountCallback {
+    fun loginAccount(success: Boolean, user: FirebaseUser?, error: String?)
 }

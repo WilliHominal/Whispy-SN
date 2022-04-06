@@ -1,5 +1,7 @@
 package com.warh.whispy_sn.ui.screens
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -9,17 +11,24 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.warh.whispy_sn.R
+import com.warh.whispy_sn.repository.AccountDaoImpl
+import com.warh.whispy_sn.routes.NavigationScreens
 import com.warh.whispy_sn.ui.components.EditText
 import com.warh.whispy_sn.ui.theme.WhispySNTheme
 
 @Composable
-fun LoginScreen(){
+fun LoginScreen(navController: NavController){
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+
+    val context = LocalContext.current
 
     Scaffold(
         modifier = Modifier
@@ -63,7 +72,14 @@ fun LoginScreen(){
                     onValueChange = { password = it },
                     hideChars = true
                 )
-                TextButton(onClick = { /*TODO register onclick action*/ }) {
+                TextButton(
+                    onClick = {
+                        navController.navigate(NavigationScreens.Register.screenRoute){
+                            popUpTo(navController.graph.startDestinationId)
+                            launchSingleTop = true
+                        }
+                    }
+                ) {
                     Text(
                         text = "Not a member? Create an account",
                         modifier = Modifier.fillMaxWidth(),
@@ -75,7 +91,20 @@ fun LoginScreen(){
                 Spacer(modifier = Modifier.padding(10.dp))
                 Button(
                     onClick = {
-                        //TODO login onclick action
+                        AccountDaoImpl().login(username, password) { success, user, error ->
+                            if (success) {
+                                Toast.makeText(context, "User logged in", Toast.LENGTH_SHORT).show()
+                                Log.d("LOGIN_SCREEN", "User logged in: ${user!!.email}")
+                                navController.navigate(NavigationScreens.AppScaffold.screenRoute){
+                                    popUpTo(navController.graph.startDestinationId)
+                                    launchSingleTop = true
+                                }
+                            } else {
+                                Toast.makeText(context, "Auth failed", Toast.LENGTH_SHORT).show()
+                                Log.d("LOGIN_SCREEN", "Auth failed: $error")
+                            }
+                        }
+                        //TODO validate fields
                     },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(5.dp),
@@ -94,7 +123,8 @@ fun LoginScreen(){
 @Preview(showBackground = true)
 @Composable
 fun LoginScreenPreview(){
+    val navController = rememberNavController()
     WhispySNTheme {
-        LoginScreen()
+        LoginScreen(navController)
     }
 }
