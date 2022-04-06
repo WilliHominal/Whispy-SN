@@ -28,7 +28,7 @@ fun EditText(
     enabled: Boolean = true,
     onGloballyPositioned: ((LayoutCoordinates) -> Unit)? = null,
     onValueChange: (String) -> Unit,
-    hideChars: Boolean
+    hideChars: Boolean = false
 ) {
     val focusManager = LocalFocusManager.current
     var passwordVisible by remember { mutableStateOf(false) }
@@ -73,7 +73,7 @@ fun EditText(
             unfocusedLabelColor = Color.Transparent
         ),
         singleLine = true,
-        visualTransformation = if (passwordVisible) PasswordVisualTransformation() else VisualTransformation.None
+        visualTransformation = if (hideChars && !passwordVisible) PasswordVisualTransformation() else VisualTransformation.None
     )
 }
 
@@ -83,6 +83,6 @@ fun EditTextPreview(){
     var text by remember { mutableStateOf("") }
 
     WhispySNTheme {
-        EditText(value = text, placeholder = "Username", onValueChange = { text = it }, hideChars = false)
+        EditText(value = text, placeholder = "Username", onValueChange = { text = it })
     }
 }

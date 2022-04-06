@@ -13,6 +13,7 @@ import com.warh.whispy_sn.repository.DataProvider
 import com.warh.whispy_sn.routes.NavigationGraph
 import com.warh.whispy_sn.ui.components.BottomNavigation
 import com.warh.whispy_sn.ui.components.Topbar
+import com.warh.whispy_sn.ui.screens.RegisterScreen
 import com.warh.whispy_sn.ui.theme.WhispySNTheme
 
 class MainActivity : ComponentActivity() {
@@ -20,7 +21,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             WhispySNTheme {
-                MainView()
+                //MainView()
+                RegisterScreen()
             }
         }
     }
