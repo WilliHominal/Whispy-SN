@@ -26,7 +26,10 @@ interface UsersDao {
 
     fun getFriendsPosts(): List<PostModel>
 
+    fun getMyUserInfo(callback: UserInfoCallback)
 
+    fun getUserInfo(username: String, callback: UserInfoCallback)
+    fun getUsersInfo(usernames: List<String>, callback: UsersListCallback)
 }
 
 @Suppress("UNCHECKED_CAST")
@@ -144,6 +147,70 @@ class UsersDaoImpl: UsersDao {
         })
     }
 
+    override fun getMyUserInfo(callback: UserInfoCallback) {
+        getUserInfo(auth.currentUser!!.displayName!!, callback)
+    }
+
+    override fun getUserInfo(username: String, callback: UserInfoCallback) {
+        database.child(USERS_PATH).child(username).addListenerForSingleValueEvent(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()){
+                    val countryTemp = snapshot.child("country").value as String
+                    val cityTemp = snapshot.child("city").value as String
+                    val urlProfileImage = snapshot.child("urlProfileImage").value as String
+                    val friends = snapshot.child("friends").value as HashMap<String, String>
+                    val posts = snapshot.child("posts").value as List<PostModel>
+
+                    val friendsAsList = ArrayList<String>(friends.values)
+
+                    val userTemp = UserModel(
+                        auth.currentUser!!.displayName!!,
+                        if (urlProfileImage == "") "https://img.freepik.com/free-vector/mother-holding-with-baby-character_40876-2370.jpg?t=st=1648932627~exp=1648933227~hmac=594237a8b84ee67bf90f676ce7d6a5cc868ec3a83c7479e0b4af26173456365c&w=826" else urlProfileImage,
+                        cityTemp,
+                        countryTemp,
+                        friendsAsList,
+                        posts
+                    )
+
+                    callback.getInfo(true, userTemp)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.w(TAG, "getMyUserInfo:onCancelled", error.toException())
+                callback.getInfo(false, null)
+            }
+
+        })
+    }
+
+    override fun getUsersInfo(usernames: List<String>, callback: UsersListCallback){
+        database.child(USERS_PATH).addListenerForSingleValueEvent(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()){
+                    val result = mutableListOf<UserModel>()
+
+                    usernames.filter { it != "" }.forEach { usernameTemp ->
+                        val countryTemp = snapshot.child(usernameTemp).child("country").value as String
+                        val cityTemp = snapshot.child(usernameTemp).child("city").value as String
+                        val urlProfileImageTemp = snapshot.child(usernameTemp).child("urlProfileImage").value as String
+                        val postsTemp = snapshot.child(usernameTemp).child("posts").value as List<PostModel>
+
+                        val tempFriend = UserModel(usernameTemp, urlProfileImageTemp, cityTemp, countryTemp, emptyList(), postsTemp)
+                        result.add(tempFriend)
+                    }
+
+                    callback.getUsers(true, result)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                callback.getUsers(false, emptyList())
+            }
+
+        })
+    }
+
     override fun getOwnPosts(): List<PostModel> {
         TODO("Not yet implemented")
     }
@@ -164,4 +231,8 @@ fun interface IsFriendCallback {
 
 fun interface FriendsCallback {
     fun getFriends(success: Boolean, friendsList: List<String>)
+}
+
+fun interface UserInfoCallback {
+    fun getInfo(success: Boolean, userInfo: UserModel?)
 }

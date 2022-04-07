@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.warh.whispy_sn.model.UserModel
+import com.warh.whispy_sn.repository.UserInfoCallback
 import com.warh.whispy_sn.repository.UsersDaoImpl
 
 class UsersViewModel: ViewModel() {
@@ -12,7 +13,9 @@ class UsersViewModel: ViewModel() {
     private val usersDao = UsersDaoImpl()
 
     val users = MutableLiveData<List<UserModel>>()
-    var friends = MutableLiveData<List<String>>()
+    val friends = MutableLiveData<List<String>>()
+    val myInfo = MutableLiveData<UserModel>()
+    val friendsInfo = MutableLiveData<List<UserModel>>()
 
     fun updateUsersList(){
         usersDao.getUsers { success, usersList ->
@@ -38,4 +41,22 @@ class UsersViewModel: ViewModel() {
         }
     }
 
+    private fun getMyUserInfo(){
+        usersDao.getMyUserInfo{ success, userInfo ->
+            if (success) myInfo.postValue(userInfo)
+        }
+    }
+
+    private fun updateFriendsInfo(){
+        myInfo.value?.let {
+            usersDao.getUsersInfo(it.friends){ success, friendsInfoList ->
+                if (success) friendsInfo.postValue(friendsInfoList)
+            }
+        }
+    }
+
+    fun loadData(){
+        getMyUserInfo()
+        updateFriendsInfo()
+    }
 }

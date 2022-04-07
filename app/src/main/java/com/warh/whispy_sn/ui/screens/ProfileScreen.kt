@@ -11,23 +11,38 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.warh.whispy_sn.model.UserModel
 import com.warh.whispy_sn.repository.DataProvider
 import com.warh.whispy_sn.ui.components.FriendView
 import com.warh.whispy_sn.ui.components.Post
 import com.warh.whispy_sn.ui.components.TitledSeparator
 import com.warh.whispy_sn.ui.components.UserView
 import com.warh.whispy_sn.ui.theme.WhispySNTheme
+import com.warh.whispy_sn.viewmodel.UsersViewModel
 
 
 @Composable
 fun ProfileScreen(
+    viewModel: UsersViewModel?,
     onEditIconClicked: () -> Unit
 ) {
-    val user = DataProvider.getMyUser()
+    var user by remember { mutableStateOf<UserModel?>(null) }
+    var friendsInfo by remember { mutableStateOf<List<UserModel>>(emptyList()) }
+
+    viewModel?.myInfo?.observe(LocalLifecycleOwner.current){
+        user = it
+    }
+
+    viewModel?.friendsInfo?.observe(LocalLifecycleOwner.current){
+        friendsInfo = it
+    }
+
+    viewModel?.loadData()
 
     Scaffold(
         modifier = Modifier
@@ -35,14 +50,16 @@ fun ProfileScreen(
             .background(MaterialTheme.colors.background),
     ) {
         LazyColumn(
-            modifier = Modifier.padding(horizontal = 15.dp).padding(top = 15.dp),
+            modifier = Modifier
+                .padding(horizontal = 15.dp)
+                .padding(top = 15.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ){
             item {
                 UserView(
-                    urlProfileImage = user.urlProfileImage,
-                    username = user.username,
-                    userLocation = "${user.city}, ${user.country}",
+                    urlProfileImage = user?.urlProfileImage ?: "",
+                    username = user?.username ?: "NO_NAME",
+                    userLocation = "${user?.city}, ${user?.country}",
                     actionIcon = Icons.Filled.Edit,
                     normalSize = false
                 ) {
@@ -58,9 +75,8 @@ fun ProfileScreen(
                 LazyRow(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ){
-                    items(user.friends) { friend ->
-                        val friendTemp = DataProvider.getUserByUsername(friend)
-                        FriendView(friendTemp.urlProfileImage, friendTemp.username)
+                    items(friendsInfo) { friend ->
+                        FriendView(urlProfileImage = friend.urlProfileImage, username = friend.username)
                     }
                 }
             }
@@ -69,9 +85,10 @@ fun ProfileScreen(
                 TitledSeparator(title = "Posts")
             }
 
-            items(DataProvider.getMyPosts()){ post ->
+            //TODO show logged user posts
+            /*items(DataProvider.getMyPosts()){ post ->
                 Post(postContent = post.textContent, postImageUrl = post.urlToImage, username = "", urlProfileImage = "", withHeader = false)
-            }
+            }*/
         }
     }
 }
@@ -80,7 +97,7 @@ fun ProfileScreen(
 @Composable
 fun ProfileScreenPreview(){
     WhispySNTheme {
-        ProfileScreen {
+        ProfileScreen(null) {
 
         }
     }
