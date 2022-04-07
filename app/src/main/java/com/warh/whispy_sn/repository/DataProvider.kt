@@ -15,15 +15,15 @@ class DataProvider {
                 "Sri Lanka",
                 listOf("ValeryH", "Papourê", "Willito"),
                 listOf(
-                    PostModel(0,
+                    PostModel("0",
                         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean et nisl tincidunt, efficitur tortor commodo, sollicitudin leo. Proin eleifend at libero tempor ultricies. Suspendisse semper fermentum pretium. Aliquam in risus tempus, hendrerit massa in, interdum elit.",
                         "https://api.lorem.space/image/face?w=150&h=150"
                     ),
-                    PostModel(1,
+                    PostModel("1",
                         "Sed lacinia condimentum odio, quis sollicitudin sem varius eget. Quisque viverra tortor libero, vel consequat urna euismod a. Phasellus id imperdiet metus. Suspendisse sollicitudin suscipit purus.",
                         "https://api.lorem.space/image/fashion?w=150&h=150"
                     ),
-                    PostModel(2,
+                    PostModel("2",
                     "Maecenas ultricies aliquet neque et iaculis. Nullam vel consequat ipsum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Duis vestibulum eros eget eros ultricies, non eleifend massa facilisis.",
                     ""
                     )
@@ -37,11 +37,11 @@ class DataProvider {
                 "Venezuela",
                 listOf("MaryJafanna"),
                 listOf(
-                    PostModel(0,
+                    PostModel("0",
                         "Pellentesque in turpis aliquet dolor dignissim facilisis non vehicula metus. Aenean lobortis bibendum justo ullamcorper sodales.",
                         ""
                     ),
-                    PostModel(1,
+                    PostModel("1",
                         "",
                         "https://api.lorem.space/image/furniture?w=150&h=150"
                     ),
@@ -55,15 +55,15 @@ class DataProvider {
                 "Francia",
                 listOf("MaryJafanna", "Willito"),
                 listOf(
-                    PostModel(0,
+                    PostModel("0",
                         "Vestibulum sit amet dui et arcu fermentum vestibulum. Etiam suscipit dui diam, sit amet pellentesque metus pulvinar mattis. In aliquam orci magna, id rutrum odio vulputate non. Proin porttitor, dui id auctor vulputate, sapien arcu egestas odio, in gravida nulla nisl eu ex. Duis vitae lectus ultrices lorem aliquet varius.",
                         "https://api.lorem.space/image/pizza?w=150&h=150"
                     ),
-                    PostModel(1,
+                    PostModel("1",
                         "Nullam vel consequat ipsum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Duis vestibulum eros eget eros ultricies, non eleifend massa facilisis.",
                         "https://api.lorem.space/image/burger?w=150&h=150"
                     ),
-                    PostModel(2,
+                    PostModel("2",
                         "Quisque viverra tortor libero, vel consequat urna euismod a. Phasellus id imperdiet metus. Suspendisse sollicitudin suscipit purus. Sed tempor, sapien at cursus tincidunt, enim turpis lobortis nisl, eu suscipit dolor quam sollicitudin nulla.",
                         "https://api.lorem.space/image/drink?w=150&h=150"
                     ),
@@ -77,11 +77,11 @@ class DataProvider {
                 "Argentina",
                 listOf("MaryJafanna", "Papourê"),
                 listOf(
-                    PostModel(0,
+                    PostModel("0",
                         "Nullam vel consequat ipsum.",
                         "https://api.lorem.space/image/house?w=150&h=150"
                     ),
-                    PostModel(1,
+                    PostModel("1",
                         "Pellentesque in turpis aliquet dolor dignissim facilisis non vehicula metus.",
                         ""
                     ),

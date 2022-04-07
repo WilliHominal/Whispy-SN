@@ -16,6 +16,7 @@ import com.warh.whispy_sn.ui.screens.MainScreen
 import com.warh.whispy_sn.ui.screens.NewPostScreen
 import com.warh.whispy_sn.ui.screens.ProfileScreen
 import com.warh.whispy_sn.ui.screens.SearchPeopleScreen
+import com.warh.whispy_sn.viewmodel.UsersViewModel
 
 sealed class BottomNavItem (var title: String, var icon: ImageVector, var screenRoute: String){
     object Home: BottomNavItem("Home", Icons.Filled.Home, "HOME")
@@ -25,13 +26,13 @@ sealed class BottomNavItem (var title: String, var icon: ImageVector, var screen
 }
 
 @Composable
-fun NavigationGraph(bottomNavController: NavHostController, modifier: Modifier){
+fun NavigationGraph(bottomNavController: NavHostController, modifier: Modifier, viewModel: UsersViewModel){
     NavHost(bottomNavController, startDestination = BottomNavItem.Home.screenRoute, modifier = modifier) {
         composable(BottomNavItem.Home.screenRoute){
             MainScreen()
         }
         composable(BottomNavItem.Search.screenRoute){
-            SearchPeopleScreen()
+            SearchPeopleScreen(viewModel)
         }
         composable(BottomNavItem.NewPost.screenRoute){
             NewPostScreen()

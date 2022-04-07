@@ -12,16 +12,17 @@ import com.warh.whispy_sn.repository.DataProvider
 import com.warh.whispy_sn.routes.NavigationGraph
 import com.warh.whispy_sn.ui.components.BottomNavigation
 import com.warh.whispy_sn.ui.components.Topbar
+import com.warh.whispy_sn.viewmodel.UsersViewModel
 
 @Composable
-fun AppScaffold(navController: NavHostController) {
+fun AppScaffold(navController: NavHostController, viewModel: UsersViewModel) {
 
     val navControllerBottom = rememberNavController()
 
     Scaffold(
         bottomBar = { BottomNavigation(navController = navControllerBottom) },
-        topBar = { Topbar(username = DataProvider.getMyUser().username, navController) },
+        topBar = { Topbar(navController) },
     ) { innerPadding ->
-        NavigationGraph(bottomNavController = navControllerBottom, modifier = Modifier.padding(innerPadding))
+        NavigationGraph(bottomNavController = navControllerBottom, modifier = Modifier.padding(innerPadding), viewModel)
     }
 }

@@ -3,12 +3,15 @@ package com.warh.whispy_sn.repository
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.warh.whispy_sn.model.PostModel
+
 
 interface AccountDao {
     fun registerAccount(username: String, email: String, password: String, city: String, country: String, callback: RegisterAccountCallback)
@@ -37,6 +40,11 @@ class AccountDaoImpl() : AccountDao {
                                 if (task.isSuccessful) {
                                     Log.d(TAG, "createUserWithEmail:success")
 
+                                    val profileUpdates = UserProfileChangeRequest.Builder()
+                                        .setDisplayName(username).build()
+
+                                    auth.currentUser?.updateProfile(profileUpdates)
+
                                     sendEmailVerification()
                                     saveUserInDatabase(username, email, country, city)
 
@@ -62,8 +70,14 @@ class AccountDaoImpl() : AccountDao {
         mapaValores["email"] = email
         mapaValores["country"] = country
         mapaValores["city"] = city
+        mapaValores["urlProfileImage"] = ""
+        mapaValores["posts"] = listOf(PostModel("NO_ID", "", ""))
 
         database.child(USERS_PATH).child(username).setValue(mapaValores)
+
+        val friendsRef = database.child(USERS_PATH).child(username).child("friends").push()
+        val friendsKey = friendsRef.key
+        friendsKey.let { database.child(USERS_PATH).child(username).child("friends").child(friendsKey!!).setValue("") }
 
         val childRef: DatabaseReference = database.child(USERNAMESLIST_PATH).push()
         val childKey: String? = childRef.key

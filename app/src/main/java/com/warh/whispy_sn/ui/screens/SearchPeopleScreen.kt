@@ -13,19 +13,33 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.warh.whispy_sn.repository.DataProvider
+import com.warh.whispy_sn.model.UserModel
 import com.warh.whispy_sn.ui.components.SearchView
 import com.warh.whispy_sn.ui.components.UserView
 import com.warh.whispy_sn.ui.theme.WhispySNTheme
+import com.warh.whispy_sn.viewmodel.UsersViewModel
 
 @Composable
-fun SearchPeopleScreen() {
+fun SearchPeopleScreen(viewModel: UsersViewModel?) {
 
     var searchText by remember { mutableStateOf("") }
 
-    val users = DataProvider.getOtherUsers()
+    var users by remember { mutableStateOf(emptyList<UserModel>()) }
+    var friends by remember { mutableStateOf(emptyList<String>()) }
+
+    viewModel?.updateFriendsList()
+    viewModel?.updateUsersList()
+
+    viewModel?.users?.observe(LocalLifecycleOwner.current){
+        users = it
+    }
+
+    viewModel?.friends?.observe(LocalLifecycleOwner.current){
+        friends = it
+    }
 
     Scaffold(
         modifier = Modifier
@@ -50,9 +64,9 @@ fun SearchPeopleScreen() {
                     urlProfileImage = user.urlProfileImage,
                     username = user.username,
                     userLocation = "${user.city}, ${user.country}",
-                    actionIcon = if (DataProvider.isFriend(user.username)) Icons.Filled.Remove else Icons.Filled.Add
+                    actionIcon = if (friends.contains(user.username)) Icons.Filled.Remove else Icons.Filled.Add
                 ) {
-                    //TODO add onclick action
+                    if (friends.contains(user.username)) viewModel?.removeFriend(user.username) else viewModel?.addFriend(user.username)
                 }
             }
         }
@@ -63,6 +77,6 @@ fun SearchPeopleScreen() {
 @Composable
 fun SearchPeopleScreenPreview(){
     WhispySNTheme {
-        SearchPeopleScreen()
+        SearchPeopleScreen(null)
     }
 }

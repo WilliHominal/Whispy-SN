@@ -11,6 +11,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.warh.whispy_sn.ui.screens.AppScaffold
 import com.warh.whispy_sn.ui.screens.LoginScreen
 import com.warh.whispy_sn.ui.screens.RegisterScreen
+import com.warh.whispy_sn.viewmodel.UsersViewModel
 import java.lang.IllegalStateException
 
 sealed class NavigationScreens (var screenRoute: String){
@@ -20,7 +21,7 @@ sealed class NavigationScreens (var screenRoute: String){
 }
 
 @Composable
-fun MainNavGraph(navController: NavHostController) {
+fun MainNavGraph(navController: NavHostController, viewModel: UsersViewModel) {
 
     val auth = FirebaseAuth.getInstance()
 
@@ -35,7 +36,7 @@ fun MainNavGraph(navController: NavHostController) {
             if (auth.currentUser != null) {
                 BackHandler(true) {}
             }
-            AppScaffold(navController)
+            AppScaffold(navController, viewModel)
         }
     }
 }

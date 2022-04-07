@@ -20,7 +20,6 @@ import com.warh.whispy_sn.ui.theme.WhispySNTheme
 
 @Composable
 fun Topbar(
-    username: String,
     navController: NavController
 ) {
     val auth = FirebaseAuth.getInstance()
@@ -37,7 +36,7 @@ fun Topbar(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ){
-                Text(text = username)
+                Text(text = auth.currentUser?.displayName ?: "NO_NAME")
                 IconButton(
                     onClick = {
                         var routesString = ""
@@ -68,6 +67,6 @@ fun Topbar(
 fun TopbarPreview(){
     val navController = rememberNavController()
     WhispySNTheme {
-        Topbar("my_username", navController)
+        Topbar(navController)
     }
 }
