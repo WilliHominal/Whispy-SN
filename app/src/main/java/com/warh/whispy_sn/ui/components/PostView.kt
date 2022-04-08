@@ -45,7 +45,7 @@ fun Post(
                     verticalAlignment = Alignment.CenterVertically
                 ){
                     Image(
-                        painter = rememberAsyncImagePainter(urlProfileImage),
+                        painter = rememberAsyncImagePainter(urlProfileImage, placeholder = painterResource(R.drawable.placeholder)),
                         contentDescription = "Profile image",
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
@@ -60,7 +60,7 @@ fun Post(
                             .weight(1f)
                             .padding(horizontal = 10.dp)
                     )
-                    IconButton(onClick = { /*TODO IMPLEMENTAR ACCION*/ }) {
+                    IconButton(onClick = { /*TODO post options clicked*/ }) {
                         Icon(Icons.Filled.Menu, "Post options")
                     }
                 }

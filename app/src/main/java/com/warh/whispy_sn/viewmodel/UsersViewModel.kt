@@ -3,7 +3,9 @@ package com.warh.whispy_sn.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
+import com.warh.whispy_sn.model.PostModel
 import com.warh.whispy_sn.model.UserModel
+import com.warh.whispy_sn.repository.PostDaoImpl
 import com.warh.whispy_sn.repository.UserInfoCallback
 import com.warh.whispy_sn.repository.UsersDaoImpl
 
@@ -11,6 +13,7 @@ class UsersViewModel: ViewModel() {
     private val auth = FirebaseAuth.getInstance()
 
     private val usersDao = UsersDaoImpl()
+    private val postDao = PostDaoImpl()
 
     val users = MutableLiveData<List<UserModel>>()
     val friends = MutableLiveData<List<String>>()
@@ -58,5 +61,10 @@ class UsersViewModel: ViewModel() {
     fun loadData(){
         getMyUserInfo()
         updateFriendsInfo()
+    }
+
+    fun addPost(postContent: String, urlToImage: String? = null){
+        val postTemp = PostModel(System.currentTimeMillis().toString(), postContent, urlToImage ?: "")
+        postDao.addPost(postTemp)
     }
 }

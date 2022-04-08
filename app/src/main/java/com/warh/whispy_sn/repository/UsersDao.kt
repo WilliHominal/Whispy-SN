@@ -55,16 +55,17 @@ class UsersDaoImpl: UsersDao {
                         val urlProfileImage = snapshot.child(key).child("urlProfileImage").value as String
                         Log.d(TAG, snapshot.child(key).child("friends").value.toString())
                         val friends = snapshot.child(key).child("friends").value as HashMap<String, String>
-                        val posts = snapshot.child(key).child("posts").value as List<PostModel>
+                        val posts = snapshot.child(key).child("posts").value as? HashMap<String, PostModel>
 
                         val friendsAsList = ArrayList<String>(friends.values)
+                        val postsAsList = posts?.let {ArrayList<PostModel>(posts.values) } ?: emptyList()
 
                         val userTemp = UserModel(key,
                             if (urlProfileImage == "") "https://img.freepik.com/free-vector/mother-holding-with-baby-character_40876-2370.jpg?t=st=1648932627~exp=1648933227~hmac=594237a8b84ee67bf90f676ce7d6a5cc868ec3a83c7479e0b4af26173456365c&w=826" else urlProfileImage,
                             cityTemp,
                             countryTemp,
                             friendsAsList,
-                            posts
+                            postsAsList
                         )
                         usersList.add(userTemp)
                     }
@@ -159,7 +160,25 @@ class UsersDaoImpl: UsersDao {
                     val cityTemp = snapshot.child("city").value as String
                     val urlProfileImage = snapshot.child("urlProfileImage").value as String
                     val friends = snapshot.child("friends").value as HashMap<String, String>
-                    val posts = snapshot.child("posts").value as List<PostModel>
+                    val posts: HashMap<String, HashMap<*,*>>? =
+                        if (snapshot.child("posts").exists())
+                            (snapshot.child("posts").value as HashMap<String, HashMap<*,*>>)
+                        else
+                            null
+
+                    val postsList = mutableListOf<PostModel>()
+
+                    posts?.let {
+                        posts.forEach { (postId, postMappedInfo) ->
+                            postsList.add(
+                                PostModel(
+                                    (postMappedInfo as HashMap<String, String>)["timestamp"]!!,
+                                    postMappedInfo["textContent"]!!,
+                                    postMappedInfo["urlToImage"]!!
+                                )
+                            )
+                        }
+                    }
 
                     val friendsAsList = ArrayList<String>(friends.values)
 
@@ -169,10 +188,11 @@ class UsersDaoImpl: UsersDao {
                         cityTemp,
                         countryTemp,
                         friendsAsList,
-                        posts
+                        postsList
                     )
 
                     callback.getInfo(true, userTemp)
+
                 }
             }
 
@@ -194,9 +214,10 @@ class UsersDaoImpl: UsersDao {
                         val countryTemp = snapshot.child(usernameTemp).child("country").value as String
                         val cityTemp = snapshot.child(usernameTemp).child("city").value as String
                         val urlProfileImageTemp = snapshot.child(usernameTemp).child("urlProfileImage").value as String
-                        val postsTemp = snapshot.child(usernameTemp).child("posts").value as List<PostModel>
+                        val postsTemp = snapshot.child(usernameTemp).child("posts").value as? HashMap<String, PostModel>
+                        val postsTempAsList = postsTemp?.let {ArrayList<PostModel>(postsTemp.values) } ?: emptyList()
 
-                        val tempFriend = UserModel(usernameTemp, urlProfileImageTemp, cityTemp, countryTemp, emptyList(), postsTemp)
+                        val tempFriend = UserModel(usernameTemp, urlProfileImageTemp, cityTemp, countryTemp, emptyList(), postsTempAsList)
                         result.add(tempFriend)
                     }
 

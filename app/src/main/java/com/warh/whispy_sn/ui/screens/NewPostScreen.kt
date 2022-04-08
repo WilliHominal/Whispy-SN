@@ -11,9 +11,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.warh.whispy_sn.ui.components.NewPostCard
 import com.warh.whispy_sn.ui.theme.WhispySNTheme
+import com.warh.whispy_sn.viewmodel.UsersViewModel
 
 @Composable
-fun NewPostScreen() {
+fun NewPostScreen(viewModel: UsersViewModel?) {
     var postText by remember { mutableStateOf("") }
 
     Scaffold(
@@ -25,8 +26,13 @@ fun NewPostScreen() {
         NewPostCard(
             postText = postText,
             onPostTextValueChange = { postText = it },
-            onUploadImageIconClicked = {  },
-            onSendIconClicked = {  }
+            onUploadImageIconClicked = {
+                //TODO implement images on posts
+            },
+            onSendIconClicked = {
+                viewModel?.addPost(postText, "")
+                //TODO urlToImage + alert message + move to another screen
+            }
         )
     }
 }
@@ -35,6 +41,6 @@ fun NewPostScreen() {
 @Composable
 private fun NewPostScreenPreview() {
     WhispySNTheme {
-        NewPostScreen()
+        NewPostScreen(null)
     }
 }

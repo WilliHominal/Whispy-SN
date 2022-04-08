@@ -71,7 +71,6 @@ class AccountDaoImpl() : AccountDao {
         mapaValores["country"] = country
         mapaValores["city"] = city
         mapaValores["urlProfileImage"] = ""
-        mapaValores["posts"] = listOf(PostModel("NO_ID", "", ""))
 
         database.child(USERS_PATH).child(username).setValue(mapaValores)
 
