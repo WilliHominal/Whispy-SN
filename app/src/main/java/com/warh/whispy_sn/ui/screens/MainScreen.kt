@@ -21,14 +21,11 @@ import com.warh.whispy_sn.viewmodel.UsersViewModel
 
 @Composable
 fun MainScreen(viewModel: UsersViewModel?) {
-    var friendsInfo by remember { mutableStateOf<List<UserModel>>(emptyList()) }
     var friendsPosts by remember { mutableStateOf<List<PostInfo>>(emptyList()) }
 
     viewModel?.loadData()
 
     viewModel?.friendsInfo?.observe(LocalLifecycleOwner.current){
-        friendsInfo = it
-
         val auxList =  mutableListOf<PostInfo>()
         it.forEach { friend ->
             friend.posts.forEach { post ->
