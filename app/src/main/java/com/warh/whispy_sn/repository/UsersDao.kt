@@ -149,7 +149,7 @@ class UsersDaoImpl: UsersDao {
     }
 
     override fun getMyUserInfo(callback: UserInfoCallback) {
-        getUserInfo(auth.currentUser!!.displayName!!, callback)
+        getUserInfo(auth.currentUser?.displayName ?: "", callback)
     }
 
     override fun getUserInfo(username: String, callback: UserInfoCallback) {
@@ -169,7 +169,7 @@ class UsersDaoImpl: UsersDao {
                     val postsList = mutableListOf<PostModel>()
 
                     posts?.let {
-                        posts.forEach { (postId, postMappedInfo) ->
+                        posts.forEach { (_, postMappedInfo) ->
                             postsList.add(
                                 PostModel(
                                     (postMappedInfo as HashMap<String, String>)["timestamp"]!!,
@@ -214,10 +214,27 @@ class UsersDaoImpl: UsersDao {
                         val countryTemp = snapshot.child(usernameTemp).child("country").value as String
                         val cityTemp = snapshot.child(usernameTemp).child("city").value as String
                         val urlProfileImageTemp = snapshot.child(usernameTemp).child("urlProfileImage").value as String
-                        val postsTemp = snapshot.child(usernameTemp).child("posts").value as? HashMap<String, PostModel>
-                        val postsTempAsList = postsTemp?.let {ArrayList<PostModel>(postsTemp.values) } ?: emptyList()
+                        val posts: HashMap<String, HashMap<*,*>>? =
+                            if (snapshot.child(usernameTemp).child("posts").exists())
+                                (snapshot.child(usernameTemp).child("posts").value as HashMap<String, HashMap<*,*>>)
+                            else
+                                null
 
-                        val tempFriend = UserModel(usernameTemp, urlProfileImageTemp, cityTemp, countryTemp, emptyList(), postsTempAsList)
+                        val postsList = mutableListOf<PostModel>()
+
+                        posts?.let {
+                            posts.forEach { (_, postMappedInfo) ->
+                                postsList.add(
+                                    PostModel(
+                                        (postMappedInfo as HashMap<String, String>)["timestamp"]!!,
+                                        postMappedInfo["textContent"]!!,
+                                        postMappedInfo["urlToImage"]!!
+                                    )
+                                )
+                            }
+                        }
+
+                        val tempFriend = UserModel(usernameTemp, urlProfileImageTemp, cityTemp, countryTemp, emptyList(), postsList)
                         result.add(tempFriend)
                     }
 

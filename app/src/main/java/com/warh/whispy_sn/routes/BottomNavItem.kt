@@ -29,7 +29,7 @@ sealed class BottomNavItem (var title: String, var icon: ImageVector, var screen
 fun NavigationGraph(bottomNavController: NavHostController, modifier: Modifier, viewModel: UsersViewModel){
     NavHost(bottomNavController, startDestination = BottomNavItem.Home.screenRoute, modifier = modifier) {
         composable(BottomNavItem.Home.screenRoute){
-            MainScreen()
+            MainScreen(viewModel)
         }
         composable(BottomNavItem.Search.screenRoute){
             SearchPeopleScreen(viewModel)

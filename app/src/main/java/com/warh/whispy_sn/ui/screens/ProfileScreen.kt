@@ -17,10 +17,7 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.warh.whispy_sn.model.UserModel
-import com.warh.whispy_sn.ui.components.FriendView
-import com.warh.whispy_sn.ui.components.Post
-import com.warh.whispy_sn.ui.components.TitledSeparator
-import com.warh.whispy_sn.ui.components.UserView
+import com.warh.whispy_sn.ui.components.*
 import com.warh.whispy_sn.ui.theme.WhispySNTheme
 import com.warh.whispy_sn.viewmodel.UsersViewModel
 
@@ -84,8 +81,14 @@ fun ProfileScreen(
             }
 
             user?.let{
-                items(it.posts){ post ->
-                    Post(postContent = post.textContent, postImageUrl = post.urlToImage, username = "", urlProfileImage = "", withHeader = false)
+                if (it.posts.isEmpty()){
+                    item {
+                        NoDataLoadedText("You havent posted anything yet. Try to post something now!")
+                    }
+                } else {
+                    items(it.posts){ post ->
+                        Post(postContent = post.textContent, postImageUrl = post.urlToImage, username = "", urlProfileImage = "", withHeader = false)
+                    }
                 }
             }
         }

@@ -8,17 +8,35 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.warh.whispy_sn.repository.DataProvider
+import com.warh.whispy_sn.model.PostModel
+import com.warh.whispy_sn.model.UserModel
 import com.warh.whispy_sn.ui.components.Post
 import com.warh.whispy_sn.ui.theme.WhispySNTheme
+import com.warh.whispy_sn.viewmodel.UsersViewModel
 
 @Composable
-fun MainScreen() {
-    val friends = DataProvider.getMyUser().friends
+fun MainScreen(viewModel: UsersViewModel?) {
+    var friendsInfo by remember { mutableStateOf<List<UserModel>>(emptyList()) }
+    var friendsPosts by remember { mutableStateOf<List<PostInfo>>(emptyList()) }
+
+    viewModel?.loadData()
+
+    viewModel?.friendsInfo?.observe(LocalLifecycleOwner.current){
+        friendsInfo = it
+
+        val auxList =  mutableListOf<PostInfo>()
+        it.forEach { friend ->
+            friend.posts.forEach { post ->
+                auxList.add(PostInfo(post, friend))
+            }
+        }
+        friendsPosts = auxList.sortedWith(postComparator)
+    }
 
     Scaffold(
         modifier = Modifier
@@ -26,27 +44,39 @@ fun MainScreen() {
             .background(MaterialTheme.colors.background),
     ) {
         LazyColumn(
-            modifier = Modifier.padding(horizontal = 15.dp).padding(top = 15.dp),
+            modifier = Modifier
+                .padding(horizontal = 15.dp)
+                .padding(top = 15.dp),
         ){
-            items(friends){ friend ->
-                DataProvider.getUserPosts(friend).forEach { post ->
+            if (!friendsPosts.isNullOrEmpty()){
+                items(friendsPosts){ friendPost ->
                     Post(
-                        DataProvider.getUserByUsername(friend).urlProfileImage,
-                        friend,
-                        post.textContent,
-                        post.urlToImage
+                        friendPost.user.urlProfileImage,
+                        friendPost.user.username,
+                        friendPost.post.textContent,
+                        friendPost.post.urlToImage
                     )
-                    Spacer(Modifier.padding(bottom = 15.dp))
+                    Spacer(Modifier.padding(15.dp))
                 }
             }
+
         }
     }
 }
+
+private val postComparator = Comparator<PostInfo> { a, b ->
+    when {
+        (a.post.timestamp > b.post.timestamp) -> -1
+        else -> 1
+    }
+}
+
+private data class PostInfo(val post: PostModel, val user: UserModel)
 
 @Preview(showBackground = true)
 @Composable
 fun MainScreenPreview(){
     WhispySNTheme {
-        MainScreen()
+        MainScreen(null)
     }
 }
