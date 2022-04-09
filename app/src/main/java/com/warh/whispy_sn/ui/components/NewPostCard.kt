@@ -1,5 +1,10 @@
 package com.warh.whispy_sn.ui.components
 
+import android.graphics.Bitmap
+import android.graphics.ImageDecoder
+import android.os.Build
+import android.provider.MediaStore
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -13,6 +18,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.warh.whispy_sn.ui.theme.WhispySNTheme
@@ -22,14 +29,16 @@ fun NewPostCard(
     postText: String,
     onPostTextValueChange: (String) -> Unit,
     onUploadImageIconClicked: () -> Unit,
-    onSendIconClicked: () -> Unit
+    onSendIconClicked: () -> Unit,
+    imageUri: String? = null,
+    imageBitmap: Bitmap? = null
 ) {
     Card(
         elevation = 2.dp,
         shape = RoundedCornerShape(20.dp),
         modifier = Modifier
             .fillMaxWidth()
-            .height(280.dp)
+            //.height(400.dp)
             .border(2.dp, MaterialTheme.colors.primary, RoundedCornerShape(20.dp))
             .background(Color.Transparent)
     ) {
@@ -38,11 +47,23 @@ fun NewPostCard(
                 value = postText,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(1f),
+                    .weight(0.4f),
                 onValueChange = onPostTextValueChange,
                 maxLines = 10,
                 placeholder = { Text("Send a new post to your friends!") },
             )
+
+            imageUri?.let {
+                imageBitmap?.let { btm ->
+
+                    Image(
+                        bitmap = btm.asImageBitmap(),
+                        contentDescription = "Post image",
+                        modifier = Modifier.padding(10.dp).weight(0.5f),
+                        contentScale = ContentScale.Crop
+                    )
+                }
+            }
 
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -54,7 +75,7 @@ fun NewPostCard(
                     Icon(Icons.Filled.AttachFile, "Upload image")
                 }
 
-                Text(text = "Upload image", modifier = Modifier.weight(1f))
+                Text(text = imageUri ?: "Upload image", modifier = Modifier.weight(1f))
 
                 IconButton(
                     onClick = onSendIconClicked

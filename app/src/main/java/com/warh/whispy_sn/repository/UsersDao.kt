@@ -61,7 +61,7 @@ class UsersDaoImpl: UsersDao {
                         val postsAsList = posts?.let {ArrayList<PostModel>(posts.values) } ?: emptyList()
 
                         val userTemp = UserModel(key,
-                            if (urlProfileImage == "") "https://img.freepik.com/free-vector/mother-holding-with-baby-character_40876-2370.jpg?t=st=1648932627~exp=1648933227~hmac=594237a8b84ee67bf90f676ce7d6a5cc868ec3a83c7479e0b4af26173456365c&w=826" else urlProfileImage,
+                            urlProfileImage,
                             cityTemp,
                             countryTemp,
                             friendsAsList,
@@ -184,7 +184,7 @@ class UsersDaoImpl: UsersDao {
 
                     val userTemp = UserModel(
                         auth.currentUser!!.displayName!!,
-                        if (urlProfileImage == "") "https://img.freepik.com/free-vector/mother-holding-with-baby-character_40876-2370.jpg?t=st=1648932627~exp=1648933227~hmac=594237a8b84ee67bf90f676ce7d6a5cc868ec3a83c7479e0b4af26173456365c&w=826" else urlProfileImage,
+                        urlProfileImage,
                         cityTemp,
                         countryTemp,
                         friendsAsList,
