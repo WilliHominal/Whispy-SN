@@ -113,7 +113,7 @@ fun RegisterScreen(navController: NavController) {
                                     Toast.makeText(context, "User created", Toast.LENGTH_SHORT)
                                         .show()
                                     Log.d("REGISTER_SCREEN", "User created: ${user!!.email}")
-                                    navController.navigate(NavigationScreens.AppScaffold.screenRoute)
+                                    navController.navigate("${NavigationScreens.AppScaffold.screenRoute}/$username")
                                 } else {
                                     Toast.makeText(context, "Register failed", Toast.LENGTH_SHORT)
                                         .show()

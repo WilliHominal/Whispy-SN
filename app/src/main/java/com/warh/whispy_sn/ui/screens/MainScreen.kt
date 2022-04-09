@@ -15,6 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.warh.whispy_sn.model.PostModel
 import com.warh.whispy_sn.model.UserModel
+import com.warh.whispy_sn.ui.components.NoDataLoadedText
 import com.warh.whispy_sn.ui.components.Post
 import com.warh.whispy_sn.ui.theme.WhispySNTheme
 import com.warh.whispy_sn.viewmodel.UsersViewModel
@@ -54,6 +55,10 @@ fun MainScreen(viewModel: UsersViewModel?) {
                         friendPost.post.urlToImage
                     )
                     Spacer(Modifier.padding(15.dp))
+                }
+            } else {
+                item {
+                    NoDataLoadedText(text = "Your friends haven't posted anything yet. Add more friends or wait for them to post something!")
                 }
             }
 

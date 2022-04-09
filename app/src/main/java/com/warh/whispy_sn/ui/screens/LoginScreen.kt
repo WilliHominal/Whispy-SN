@@ -95,7 +95,7 @@ fun LoginScreen(navController: NavController){
                             if (success) {
                                 Toast.makeText(context, "User logged in", Toast.LENGTH_SHORT).show()
                                 Log.d("LOGIN_SCREEN", "User logged in: ${user!!.email}")
-                                navController.navigate(NavigationScreens.AppScaffold.screenRoute){
+                                navController.navigate("${NavigationScreens.AppScaffold.screenRoute}/$username"){
                                     popUpTo(navController.graph.startDestinationId)
                                     launchSingleTop = true
                                 }

@@ -4,11 +4,9 @@ import android.widget.ImageView
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
-import com.warh.whispy_sn.model.PostModel
 import com.warh.whispy_sn.model.UserModel
 import com.warh.whispy_sn.repository.ImagesStorage
 import com.warh.whispy_sn.repository.PostDaoImpl
-import com.warh.whispy_sn.repository.UserInfoCallback
 import com.warh.whispy_sn.repository.UsersDaoImpl
 
 class UsersViewModel: ViewModel() {

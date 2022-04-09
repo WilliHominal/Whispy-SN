@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Logout
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,7 +19,8 @@ import com.warh.whispy_sn.ui.theme.WhispySNTheme
 
 @Composable
 fun Topbar(
-    navController: NavController
+    navController: NavController,
+    username: String
 ) {
     val auth = FirebaseAuth.getInstance()
 
@@ -36,7 +36,7 @@ fun Topbar(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ){
-                Text(text = auth.currentUser?.displayName ?: "NO_NAME")
+                Text(text = username)
                 IconButton(
                     onClick = {
                         var routesString = ""
@@ -67,6 +67,6 @@ fun Topbar(
 fun TopbarPreview(){
     val navController = rememberNavController()
     WhispySNTheme {
-        Topbar(navController)
+        Topbar(navController, "NONAME")
     }
 }

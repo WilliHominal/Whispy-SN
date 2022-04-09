@@ -38,6 +38,7 @@ class UsersDaoImpl: UsersDao {
         private const val TAG = "USERS_DAO_IMPL"
         private const val USERS_PATH = "users"
         private const val USERNAMESLIST_PATH = "usernamesList"
+        private const val DEFAULT_PROFILE_URL = "https://firebasestorage.googleapis.com/v0/b/whispy-d7f2b.appspot.com/o/images%2Fuser-default.png?alt=media&token=20f06fda-a67a-4b4e-bc48-590d65db81e7"
     }
 
     private val auth = FirebaseAuth.getInstance()
@@ -61,7 +62,7 @@ class UsersDaoImpl: UsersDao {
                         val postsAsList = posts?.let {ArrayList<PostModel>(posts.values) } ?: emptyList()
 
                         val userTemp = UserModel(key,
-                            urlProfileImage,
+                            urlProfileImage.ifEmpty { DEFAULT_PROFILE_URL },
                             cityTemp,
                             countryTemp,
                             friendsAsList,
@@ -156,10 +157,10 @@ class UsersDaoImpl: UsersDao {
         database.child(USERS_PATH).child(username).addListenerForSingleValueEvent(object: ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()){
-                    val countryTemp = snapshot.child("country").value as String
-                    val cityTemp = snapshot.child("city").value as String
-                    val urlProfileImage = snapshot.child("urlProfileImage").value as String
-                    val friends = snapshot.child("friends").value as HashMap<String, String>
+                    val countryTemp = snapshot.child("country").value as String?
+                    val cityTemp = snapshot.child("city").value as String?
+                    val urlProfileImage = snapshot.child("urlProfileImage").value as String?
+                    val friends = snapshot.child("friends").value as HashMap<String, String>?
                     val posts: HashMap<String, HashMap<*,*>>? =
                         if (snapshot.child("posts").exists())
                             (snapshot.child("posts").value as HashMap<String, HashMap<*,*>>)
@@ -180,13 +181,13 @@ class UsersDaoImpl: UsersDao {
                         }
                     }
 
-                    val friendsAsList = ArrayList<String>(friends.values)
+                    val friendsAsList = ArrayList<String>(friends?.values ?: emptyList())
 
                     val userTemp = UserModel(
-                        auth.currentUser!!.displayName!!,
-                        urlProfileImage,
-                        cityTemp,
-                        countryTemp,
+                        username,
+                        urlProfileImage?.ifEmpty { DEFAULT_PROFILE_URL } ?: DEFAULT_PROFILE_URL,
+                        cityTemp ?: "",
+                        countryTemp ?: "",
                         friendsAsList,
                         postsList
                     )
@@ -234,7 +235,7 @@ class UsersDaoImpl: UsersDao {
                             }
                         }
 
-                        val tempFriend = UserModel(usernameTemp, urlProfileImageTemp, cityTemp, countryTemp, emptyList(), postsList)
+                        val tempFriend = UserModel(usernameTemp, urlProfileImageTemp.ifEmpty { DEFAULT_PROFILE_URL }, cityTemp, countryTemp, emptyList(), postsList)
                         result.add(tempFriend)
                     }
 

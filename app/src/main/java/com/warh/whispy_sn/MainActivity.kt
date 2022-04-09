@@ -7,14 +7,13 @@ import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.warh.whispy_sn.repository.UsersDaoImpl
 import com.warh.whispy_sn.routes.MainNavGraph
 import com.warh.whispy_sn.ui.theme.WhispySNTheme
 import com.warh.whispy_sn.viewmodel.UsersViewModel
 
 class MainActivity : ComponentActivity() {
 
-    val viewModel: UsersViewModel by viewModels()
+    private val viewModel: UsersViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
