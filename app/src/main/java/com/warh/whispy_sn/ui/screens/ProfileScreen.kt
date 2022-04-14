@@ -1,5 +1,13 @@
 package com.warh.whispy_sn.ui.screens
 
+import android.graphics.Bitmap
+import android.graphics.ImageDecoder
+import android.net.Uri
+import android.os.Build
+import android.provider.MediaStore
+import android.widget.ImageView
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,6 +21,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -24,10 +33,17 @@ import com.warh.whispy_sn.viewmodel.UsersViewModel
 @Composable
 fun ProfileScreen(
     viewModel: UsersViewModel?,
-    onEditIconClicked: () -> Unit
 ) {
     var user by remember { mutableStateOf<UserModel?>(null) }
     var friendsInfo by remember { mutableStateOf<List<UserModel>>(emptyList()) }
+
+    var imageUri by remember { mutableStateOf<Uri?>(null) }
+    val context = LocalContext.current
+    val bitmap = remember { mutableStateOf<Bitmap?>(null) }
+
+    val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()){ uri ->
+        imageUri = uri
+    }
 
     viewModel?.myInfo?.observe(LocalLifecycleOwner.current){
         user = it
@@ -44,6 +60,22 @@ fun ProfileScreen(
             .fillMaxSize()
             .background(MaterialTheme.colors.background),
     ) {
+        imageUri?.let {
+            if(Build.VERSION.SDK_INT < 28){
+                bitmap.value = MediaStore.Images
+                    .Media.getBitmap(context.contentResolver, it)
+            } else {
+                val source = ImageDecoder.createSource(context.contentResolver, it)
+                bitmap.value = ImageDecoder.decodeBitmap(source)
+            }
+
+            val profileImageView = ImageView(context)
+            profileImageView.setImageURI(imageUri)
+            viewModel?.editProfile(profileImageView)
+
+            imageUri = null
+        }
+
         LazyColumn(
             modifier = Modifier
                 .padding(horizontal = 15.dp)
@@ -58,7 +90,7 @@ fun ProfileScreen(
                     actionIcon = Icons.Filled.Edit,
                     normalSize = false
                 ) {
-                    onEditIconClicked()
+                    launcher.launch("image/*")
                 }
             }
 
@@ -99,8 +131,6 @@ fun ProfileScreen(
 @Composable
 fun ProfileScreenPreview(){
     WhispySNTheme {
-        ProfileScreen(null) {
-
-        }
+        ProfileScreen(null)
     }
 }

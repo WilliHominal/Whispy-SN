@@ -67,7 +67,7 @@ fun NewPostScreen(viewModel: UsersViewModel?) {
                     viewModel?.addPost(postTimestamp, postText)
                 }
 
-                //TODO urlToImage + alert message + clear screen
+                //TODO alert message + clear screen
             },
             imageUri = imageUri?.lastPathSegment.toString(),
             imageBitmap = bitmap.value

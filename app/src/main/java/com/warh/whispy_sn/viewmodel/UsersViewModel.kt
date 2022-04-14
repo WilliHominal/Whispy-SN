@@ -69,11 +69,7 @@ class UsersViewModel: ViewModel() {
         postDao.addPost(timestamp, postContent, imageView)
     }
 
-    fun uploadProfilePhoto(imageView: ImageView){
+    fun editProfile(imageView: ImageView){
         storage.uploadProfilePhoto(imageView)
-    }
-
-    fun uploadPostPhoto(idImage: String, imageView: ImageView){
-        storage.uploadPostPhoto(idImage, imageView)
     }
 }

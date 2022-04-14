@@ -58,12 +58,6 @@ class PostDaoImpl: PostDao {
             val post = PostModel(timestamp, postContent, "")
             database.child(USERS_PATH).child(auth.currentUser!!.displayName!!).child("posts").child(childKey!!).setValue(post)
         }
-
-
-
-
-
-
     }
 
 }

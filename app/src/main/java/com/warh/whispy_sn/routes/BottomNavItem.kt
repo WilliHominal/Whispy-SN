@@ -37,7 +37,7 @@ fun NavigationGraph(bottomNavController: NavHostController, modifier: Modifier, 
             NewPostScreen(viewModel)
         }
         composable(BottomNavItem.Profile.screenRoute){
-            ProfileScreen(viewModel){}
+            ProfileScreen(viewModel)
         }
     }
 }
