@@ -3,15 +3,15 @@ package com.warh.whispy_sn.viewmodel
 import android.widget.ImageView
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.firebase.auth.FirebaseAuth
+import androidx.lifecycle.viewModelScope
 import com.warh.whispy_sn.model.UserModel
 import com.warh.whispy_sn.repository.ImagesStorage
 import com.warh.whispy_sn.repository.PostDaoImpl
 import com.warh.whispy_sn.repository.UsersDaoImpl
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class UsersViewModel: ViewModel() {
-    private val auth = FirebaseAuth.getInstance()
-
     private val usersDao = UsersDaoImpl()
     private val postDao = PostDaoImpl()
 
@@ -23,46 +23,42 @@ class UsersViewModel: ViewModel() {
     val friendsInfo = MutableLiveData<List<UserModel>>()
 
     fun updateUsersList(){
-        usersDao.getUsers { success, usersList ->
-            if (success) users.postValue(usersList.filter { user -> user.username != auth.currentUser!!.displayName })
+        viewModelScope.launch(Dispatchers.IO) {
+            users.postValue(usersDao.getUsers())
         }
     }
 
     fun updateFriendsList(){
-        usersDao.getFriends { success, friendsList ->
-            if (success) friends.postValue(friendsList)
+        viewModelScope.launch(Dispatchers.IO) {
+            friends.postValue(usersDao.getFriends())
         }
     }
 
     fun addFriend(oUsername: String){
-        usersDao.addFriend(oUsername){ success, friendsList ->
-            if (success) friends.postValue(friendsList)
+        viewModelScope.launch(Dispatchers.IO) {
+            usersDao.addFriend(oUsername)
+            friends.postValue(usersDao.getFriends())
         }
     }
 
     fun removeFriend(oUsername: String){
-        usersDao.removeFriend(oUsername){ success, friendsList ->
-            if (success) friends.postValue(friendsList)
-        }
-    }
-
-    private fun getMyUserInfo(){
-        usersDao.getMyUserInfo{ success, userInfo ->
-            if (success) myInfo.postValue(userInfo)
-        }
-    }
-
-    private fun updateFriendsInfo(){
-        myInfo.value?.let {
-            usersDao.getUsersInfo(it.friends){ success, friendsInfoList ->
-                if (success) friendsInfo.postValue(friendsInfoList)
-            }
+        viewModelScope.launch(Dispatchers.IO) {
+            usersDao.removeFriend(oUsername)
+            friends.postValue(usersDao.getFriends())
         }
     }
 
     fun loadData(){
-        getMyUserInfo()
-        updateFriendsInfo()
+        viewModelScope.launch(Dispatchers.IO){
+            launch {
+                myInfo.postValue(usersDao.getMyUserInfo())
+            }
+            launch {
+                myInfo.value?.let {
+                    friendsInfo.postValue(usersDao.getUsersInfo(it.friends))
+                }
+            }
+        }
     }
 
     fun addPost(timestamp: String, postContent: String, imageView: ImageView? = null){
